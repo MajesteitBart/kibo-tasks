@@ -1,0 +1,316 @@
+/* Kibo Tasks – Obsidian Kanban Plugin
+   Design: Kibo UI inspired – clean, spacious, minimal.
+   Uses Obsidian CSS variables for light/dark theme compatibility. */
+
+/* ── Container ── */
+.kibo-tasks-container {
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--background-primary);
+}
+
+/* ── Board ── */
+.kibo-board {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── Columns Container ── */
+.kibo-columns {
+  display: flex;
+  gap: 16px;
+  padding: 24px 24px 24px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex: 1;
+  align-items: stretch;
+}
+
+/* ── Column (expanded) ── */
+.kibo-column {
+  background: transparent;
+  min-width: 300px;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  flex-shrink: 0;
+}
+
+/* ── Column Header ── */
+.kibo-column-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px 16px;
+  flex-shrink: 0;
+}
+
+.kibo-column-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Status dot (colored circle like Kibo) */
+.kibo-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Column title – italic like Kibo UI */
+.kibo-column-title {
+  font-size: 14px;
+  font-weight: 600;
+  font-style: italic;
+  color: var(--text-normal);
+  letter-spacing: -0.01em;
+}
+
+/* Collapse button – subtle minus */
+.kibo-collapse-btn {
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  cursor: pointer;
+  padding: 2px 6px;
+  font-size: 14px;
+  line-height: 1;
+  border-radius: 4px;
+  transition: color 120ms ease, background 120ms ease;
+  opacity: 0;
+}
+
+.kibo-column:hover .kibo-collapse-btn {
+  opacity: 1;
+}
+
+.kibo-collapse-btn:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-muted);
+}
+
+/* ── Column (collapsed) – thin vertical strip ── */
+.kibo-column--collapsed {
+  min-width: 40px !important;
+  max-width: 40px !important;
+  background: var(--background-secondary);
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 14px 0;
+  gap: 12px;
+  transition: background 120ms ease;
+  max-height: 100%;
+}
+
+.kibo-column--collapsed:hover {
+  background: var(--background-modifier-hover);
+}
+
+.kibo-column--collapsed .kibo-status-dot {
+  flex-shrink: 0;
+}
+
+.kibo-collapsed-label {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 12px;
+  font-weight: 600;
+  font-style: italic;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.kibo-collapsed-count {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-faint);
+}
+
+/* ── Card Container ── */
+.kibo-card-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  min-height: 40px;
+  flex: 1;
+  padding: 0 2px 8px;
+}
+
+/* ── Card ── */
+.kibo-card {
+  background: var(--background-primary);
+  border-radius: 10px;
+  border: 1px solid var(--background-modifier-border);
+  padding: 14px 16px;
+  cursor: grab;
+  transition: box-shadow 150ms ease, border-color 150ms ease;
+  user-select: none;
+}
+
+.kibo-card:hover {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  border-color: var(--background-modifier-border-hover, var(--background-modifier-border));
+}
+
+.kibo-card:active {
+  cursor: grabbing;
+}
+
+/* Priority: subtle left accent via box-shadow inset */
+.kibo-card--has-priority {
+  border-left: 3px solid var(--kibo-priority-color, transparent);
+}
+
+/* ── Card Body ── */
+.kibo-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Description – Kibo uses semi-bold, ~14px */
+.kibo-card-description {
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--text-normal);
+  word-wrap: break-word;
+}
+
+/* Date line – muted, small, below description (like Kibo) */
+.kibo-card-date {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-faint);
+  min-height: 16px;
+}
+
+.kibo-date--overdue {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.kibo-date--today {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.kibo-date--done {
+  color: #22c55e;
+}
+
+.kibo-card-source {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--text-faint);
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Tags */
+.kibo-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.kibo-tag {
+  font-size: 11px;
+  color: var(--text-muted);
+  background: var(--background-secondary);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+/* ── Empty State ── */
+.kibo-empty-state {
+  text-align: center;
+  padding: 24px 12px;
+  color: var(--text-faint);
+  font-size: 13px;
+  font-style: italic;
+}
+
+/* ── SortableJS Drag States ── */
+.kibo-ghost {
+  opacity: 0.35;
+}
+
+.kibo-chosen {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.kibo-drag {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: rotate(0.5deg);
+  z-index: 1000;
+}
+
+/* ── Settings ── */
+.kibo-settings-columns .setting-item {
+  border-bottom: 1px solid var(--background-modifier-border);
+  padding: 8px 0;
+}
+
+/* ── Scrollbar Styling ── */
+.kibo-card-container::-webkit-scrollbar {
+  width: 3px;
+}
+
+.kibo-card-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.kibo-card-container::-webkit-scrollbar-thumb {
+  background: var(--background-modifier-border);
+  border-radius: 3px;
+}
+
+.kibo-card-container::-webkit-scrollbar-thumb:hover {
+  background: var(--text-faint);
+}
+
+.kibo-columns::-webkit-scrollbar {
+  height: 4px;
+}
+
+.kibo-columns::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.kibo-columns::-webkit-scrollbar-thumb {
+  background: var(--background-modifier-border);
+  border-radius: 4px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .kibo-column {
+    min-width: 260px;
+    max-width: 260px;
+  }
+
+  .kibo-columns {
+    gap: 10px;
+    padding: 12px;
+  }
+}

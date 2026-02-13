@@ -1,0 +1,22 @@
+{
+  "name": "kibo-tasks",
+  "version": "1.0.0",
+  "description": "Kanban board for Obsidian Tasks",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "node esbuild.config.mjs production"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "esbuild": "^0.20.0",
+    "obsidian": "latest",
+    "typescript": "^5.3.0",
+    "builtin-modules": "^3.3.0",
+    "sortablejs": "^1.15.0",
+    "@types/sortablejs": "^1.15.0"
+  },
+  "dependencies": {
+    "sortablejs": "^1.15.0"
+  }
+}
