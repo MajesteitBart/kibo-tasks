@@ -3,7 +3,7 @@
   "name": "Kibo Tasks",
   "version": "1.0.0",
   "minAppVersion": "1.5.0",
-  "description": "Drag-and-drop Kanban board for Obsidian Tasks with tag-based columns that update your markdown files.",
+  "description": "Drag-and-drop Kanban board with tag-based columns that update your markdown files.",
   "author": "Bart van der Meeren",
   "authorUrl": "https://github.com/MajesteitBart",
   "isDesktopOnly": false
