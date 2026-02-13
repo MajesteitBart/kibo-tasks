@@ -6,6 +6,8 @@ Drag tasks between columns to update their status directly in your markdown file
 
 ![Kibo Tasks](https://img.shields.io/badge/Obsidian-Plugin-blueviolet)
 
+![Kibo Tasks screenshot](assets/screenshot.jpg)
+
 ## Features
 
 - **Tag-based columns** — Dragging a card between columns adds/removes tags in the source file
@@ -13,7 +15,7 @@ Drag tasks between columns to update their status directly in your markdown file
 - **Live updates** — Edits in your files reflect on the board within ~300ms
 - **Drag & drop** — Powered by SortableJS for smooth cross-column dragging
 - **Collapsible columns** — Collapsed columns become thin vertical strips to save space
-- **Kibo UI design** — Clean, spacious aesthetic with colored status dots and italic headers
+- **Kibo UI inspired design** — Clean, spacious aesthetic with colored status dots and italic headers
 - **Theme-aware** — Works with light and dark Obsidian themes
 
 ## Default Columns
@@ -78,6 +80,16 @@ npm install
 npm run dev    # development build with sourcemaps
 npm run build  # production build
 ```
+
+## Contributing
+Contributions are welcome! Please open an issue or submit a pull request. 
+
+
+
+## Acknowledgments
+
+- [Obsidian Tasks](https://github.com/obsidian-tasks-group/obsidian-tasks) by Clare Macrae and contributors — the excellent task management plugin that Kibo Tasks is built to work with
+- [Kibo UI](https://www.kibo-ui.com/) by Hayden Bleasel — the beautiful shadcn/ui extension library that inspired the design of this plugin
 
 ## License
 

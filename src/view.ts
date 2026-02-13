@@ -50,13 +50,14 @@ export class KiboTasksView extends ItemView {
       this.settings.columns
     );
 
-    // Initialize board renderer
+    // Initialize board renderer — pass `this` as the Component for MarkdownRenderer
     this.renderer = new BoardRenderer(
       this.app,
       container,
       this.store,
       this.dragHandler,
-      this.settings
+      this.settings,
+      this // Component reference for Obsidian's MarkdownRenderer
     );
 
     // Subscribe to store changes

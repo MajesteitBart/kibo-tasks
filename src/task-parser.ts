@@ -1,4 +1,4 @@
-import type { KiboTask, ColumnConfig, TaskStatus } from './types';
+import type { KiboTask, SubTask, ColumnConfig, TaskStatus } from './types';
 import { parseEmojiMetadata, cleanDescription } from './utils/emoji-parser';
 
 const TASK_LINE_REGEX = /^(\s*)- \[([ x\/\-!])\]\s+(.+)$/;
@@ -29,7 +29,7 @@ export function parseTasksFromContent(
     const statusChar = match[2] as TaskStatus;
     const rawText = match[3];
 
-    // Skip indented sub-tasks
+    // Skip indented sub-tasks (they'll be captured by their parent)
     if (indent.length > 0) continue;
 
     // Must contain the global filter tag
@@ -54,11 +54,37 @@ export function parseTasksFromContent(
       }
     }
 
-    // Build clean description
+    // Build clean description (keeps markdown like [[links]], **bold**, etc.)
     const allColumnTagsArr = Array.from(columnTagSet);
     const description = cleanDescription(rawText, globalFilter, allColumnTagsArr);
 
     const sourceFileName = filePath.split('/').pop() || filePath;
+
+    // Collect subtasks: indented task lines immediately following this task
+    const subtasks: SubTask[] = [];
+    for (let j = i + 1; j < lines.length; j++) {
+      const subLine = lines[j];
+      const subMatch = subLine.match(TASK_LINE_REGEX);
+      if (!subMatch) {
+        // Non-task line: if blank, continue looking; if non-blank non-task, stop
+        if (subLine.trim() === '') continue;
+        if (subLine.match(/^\s+/)) continue; // indented non-task content (notes)
+        break;
+      }
+      const subIndent = subMatch[1];
+      if (subIndent.length === 0) break; // Back to top-level = new task
+
+      const subStatus = subMatch[2] as TaskStatus;
+      const subRawText = subMatch[3];
+      const subDescription = cleanDescription(subRawText, globalFilter, allColumnTagsArr);
+
+      subtasks.push({
+        rawLine: subLine,
+        description: subDescription,
+        status: subStatus,
+        lineNumber: j,
+      });
+    }
 
     tasks.push({
       id: `${filePath}::${i}`,
@@ -73,6 +99,8 @@ export function parseTasksFromContent(
       tags: allTags,
       columnTags: matchedColumnTags,
       sourceFileName: sourceFileName.replace(/\.md$/, ''),
+      subtasks,
+      pageTags: [], // Populated by the TaskStore after parsing
     });
   }
 

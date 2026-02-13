@@ -36,6 +36,13 @@ export class TaskStore {
           this.settings.globalFilter,
           this.settings.columns
         );
+
+        // Populate page tags from frontmatter
+        const pageTags = this.getPageTags(file);
+        for (const task of fileTasks) {
+          task.pageTags = pageTags;
+        }
+
         allTasks.push(...fileTasks);
       } catch {
         // Skip unreadable files
@@ -65,6 +72,13 @@ export class TaskStore {
             this.settings.globalFilter,
             this.settings.columns
           );
+
+          // Populate page tags from frontmatter
+          const pageTags = this.getPageTags(file as TFile);
+          for (const task of fileTasks) {
+            task.pageTags = pageTags;
+          }
+
           this.tasks.push(...fileTasks);
         } catch {
           // Skip
@@ -219,6 +233,19 @@ export class TaskStore {
   }
 
   // --- Private ---
+
+  private getPageTags(file: TFile): string[] {
+    const cache = this.app.metadataCache.getFileCache(file);
+    if (!cache?.frontmatter?.tags) return [];
+    const tags = cache.frontmatter.tags;
+    if (Array.isArray(tags)) {
+      return tags.map((t: string) => (t.startsWith('#') ? t : `#${t}`));
+    }
+    if (typeof tags === 'string') {
+      return [tags.startsWith('#') ? tags : `#${tags}`];
+    }
+    return [];
+  }
 
   private isExcluded(path: string): boolean {
     return this.settings.excludedFolders.some(

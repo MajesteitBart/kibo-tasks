@@ -1,5 +1,6 @@
 /* Kibo Tasks – Obsidian Kanban Plugin
-   Design: Kibo UI inspired – clean, spacious, minimal.
+   Design: Matches Kibo UI kanban component (shadcn/ui based).
+   Source: https://www.kibo-ui.com/components/kanban
    Uses Obsidian CSS variables for light/dark theme compatibility. */
 
 /* ── Container ── */
@@ -24,7 +25,7 @@
 .kibo-columns {
   display: flex;
   gap: 16px;
-  padding: 24px 24px 24px;
+  padding: 20px;
   overflow-x: auto;
   overflow-y: hidden;
   flex: 1;
@@ -33,13 +34,17 @@
 
 /* ── Column (expanded) ── */
 .kibo-column {
-  background: transparent;
-  min-width: 300px;
-  max-width: 300px;
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  min-width: 280px;
+  max-width: 280px;
   display: flex;
   flex-direction: column;
   max-height: 100%;
   flex-shrink: 0;
+  overflow: hidden;
 }
 
 /* ── Column Header ── */
@@ -47,8 +52,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 4px 16px;
+  padding: 8px;
   flex-shrink: 0;
+  border-bottom: 1px solid var(--background-modifier-border);
 }
 
 .kibo-column-header-left {
@@ -57,7 +63,7 @@
   gap: 8px;
 }
 
-/* Status dot (colored circle like Kibo) */
+/* Status dot */
 .kibo-status-dot {
   width: 8px;
   height: 8px;
@@ -65,16 +71,14 @@
   flex-shrink: 0;
 }
 
-/* Column title – italic like Kibo UI */
+/* Column title */
 .kibo-column-title {
   font-size: 14px;
   font-weight: 600;
-  font-style: italic;
   color: var(--text-normal);
-  letter-spacing: -0.01em;
 }
 
-/* Collapse button – subtle minus */
+/* Collapse button */
 .kibo-collapse-btn {
   background: none;
   border: none;
@@ -97,17 +101,19 @@
   color: var(--text-muted);
 }
 
-/* ── Column (collapsed) – thin vertical strip ── */
+/* ── Column (collapsed) ── */
 .kibo-column--collapsed {
   min-width: 40px !important;
   max-width: 40px !important;
   background: var(--background-secondary);
-  border-radius: 10px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 14px 0;
+  padding: 12px 0;
   gap: 12px;
   transition: background 120ms ease;
   max-height: 100%;
@@ -126,7 +132,6 @@
   text-orientation: mixed;
   font-size: 12px;
   font-weight: 600;
-  font-style: italic;
   color: var(--text-muted);
   letter-spacing: 0.02em;
   white-space: nowrap;
@@ -147,58 +152,99 @@
   overflow-y: auto;
   min-height: 40px;
   flex: 1;
-  padding: 0 2px 8px;
+  padding: 8px;
 }
 
 /* ── Card ── */
 .kibo-card {
   background: var(--background-primary);
-  border-radius: 10px;
+  border-radius: 6px;
   border: 1px solid var(--background-modifier-border);
-  padding: 14px 16px;
+  padding: 12px;
   cursor: grab;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   transition: box-shadow 150ms ease, border-color 150ms ease;
   user-select: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .kibo-card:hover {
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-  border-color: var(--background-modifier-border-hover, var(--background-modifier-border));
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
 .kibo-card:active {
   cursor: grabbing;
 }
 
-/* Priority: subtle left accent via box-shadow inset */
-.kibo-card--has-priority {
-  border-left: 3px solid var(--kibo-priority-color, transparent);
+/* Priority badge */
+.kibo-priority-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  color: var(--kibo-priority-color);
+  background: color-mix(in srgb, var(--kibo-priority-color) 12%, transparent);
+  width: fit-content;
 }
 
-/* ── Card Body ── */
-.kibo-card-body {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-/* Description – Kibo uses semi-bold, ~14px */
+/* ── Card Description — Obsidian markdown rendered ── */
 .kibo-card-description {
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 500;
-  line-height: 1.5;
+  line-height: 1.45;
   color: var(--text-normal);
   word-wrap: break-word;
 }
 
-/* Date line – muted, small, below description (like Kibo) */
+/* Reset Obsidian's markdown rendering inside cards */
+.kibo-card-description p {
+  margin: 0;
+  padding: 0;
+}
+
+.kibo-card-description p:not(:first-child) {
+  margin-top: 4px;
+}
+
+/* Internal links inside cards */
+.kibo-card-description .internal-link {
+  color: var(--text-accent);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.kibo-card-description .internal-link:hover {
+  text-decoration: underline;
+}
+
+/* Tags rendered inside card descriptions */
+.kibo-card-description .tag {
+  color: var(--text-accent);
+  background: none;
+  font-size: inherit;
+  padding: 0;
+}
+
+/* Keep code inline in cards compact */
+.kibo-card-description code {
+  font-size: 12px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: var(--background-secondary);
+}
+
+/* ── Date line ── */
 .kibo-card-date {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   font-size: 12px;
   color: var(--text-faint);
-  min-height: 16px;
 }
 
 .kibo-date--overdue {
@@ -212,30 +258,127 @@
 }
 
 .kibo-date--done {
-  color: #22c55e;
+  color: #10B981;
 }
 
-.kibo-card-source {
-  margin-left: auto;
-  font-size: 11px;
-  color: var(--text-faint);
-  max-width: 120px;
+/* ── Subtasks ── */
+.kibo-subtasks {
+  margin-top: 4px;
+  border-top: 1px solid var(--background-modifier-border);
+  padding-top: 6px;
+}
+
+.kibo-subtasks-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 2px 0;
+}
+
+.kibo-subtasks-toggle:hover {
+  color: var(--text-normal);
+}
+
+.kibo-subtasks-chevron {
+  font-size: 10px;
+  width: 12px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.kibo-subtasks-summary {
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+/* Subtask progress bar */
+.kibo-subtasks-progress {
+  flex: 1;
+  height: 3px;
+  background: var(--background-modifier-border);
+  border-radius: 2px;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  margin-left: 4px;
 }
 
-/* Tags */
-.kibo-card-tags {
+.kibo-subtasks-progress-fill {
+  height: 100%;
+  background: var(--interactive-accent);
+  border-radius: 2px;
+  transition: width 200ms ease;
+}
+
+/* Subtask list */
+.kibo-subtasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 6px;
+}
+
+.kibo-subtasks-list--collapsed {
+  display: none;
+}
+
+.kibo-subtask-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+.kibo-subtask-checkbox {
+  flex-shrink: 0;
+  font-size: 13px;
+  line-height: 1.3;
+  cursor: default;
+}
+
+.kibo-subtask-checkbox--done {
+  color: var(--text-faint);
+}
+
+/* Subtask description — markdown rendered */
+.kibo-subtask-description {
+  flex: 1;
+  min-width: 0;
+}
+
+.kibo-subtask-description p {
+  margin: 0;
+  padding: 0;
+}
+
+.kibo-subtask-description .internal-link {
+  color: var(--text-accent);
+  text-decoration: none;
+}
+
+/* Done subtasks get strikethrough */
+.kibo-subtask-checkbox--done + .kibo-subtask-description {
+  text-decoration: line-through;
+  color: var(--text-faint);
+}
+
+/* ── Card Footer — page tags ── */
+.kibo-card-footer {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
-  margin-top: 2px;
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px solid var(--background-modifier-border);
 }
 
-.kibo-tag {
-  font-size: 11px;
-  color: var(--text-muted);
+.kibo-page-tag {
+  font-size: 10px;
+  color: var(--text-faint);
   background: var(--background-secondary);
   padding: 1px 6px;
   border-radius: 4px;
@@ -247,21 +390,24 @@
   padding: 24px 12px;
   color: var(--text-faint);
   font-size: 13px;
-  font-style: italic;
 }
 
 /* ── SortableJS Drag States ── */
 .kibo-ghost {
-  opacity: 0.35;
+  opacity: 0.3;
 }
 
 .kibo-chosen {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow:
+    0 0 0 2px var(--interactive-accent),
+    0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  z-index: 100;
 }
 
 .kibo-drag {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  transform: rotate(0.5deg);
+  box-shadow:
+    0 0 0 2px var(--interactive-accent),
+    0 4px 12px rgba(0, 0, 0, 0.1);
   z-index: 1000;
 }
 
@@ -305,8 +451,8 @@
 /* ── Responsive ── */
 @media (max-width: 600px) {
   .kibo-column {
-    min-width: 260px;
-    max-width: 260px;
+    min-width: 240px;
+    max-width: 240px;
   }
 
   .kibo-columns {

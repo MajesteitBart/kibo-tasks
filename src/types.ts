@@ -13,12 +13,19 @@ export interface ColumnConfig {
   limit?: number;
 }
 
+export interface SubTask {
+  rawLine: string;
+  description: string;
+  status: TaskStatus;
+  lineNumber: number;
+}
+
 export interface KiboTask {
   id: string;               // `${filePath}::${lineNumber}`
   filePath: string;
   lineNumber: number;
   rawLine: string;
-  description: string;       // Clean text for card display
+  description: string;       // Clean text for card display (markdown)
   status: TaskStatus;
   dueDate: string | null;    // YYYY-MM-DD
   doneDate: string | null;
@@ -26,6 +33,8 @@ export interface KiboTask {
   tags: string[];            // Tags except #task and column tags
   columnTags: string[];      // Tags matching configured columns
   sourceFileName: string;
+  subtasks: SubTask[];       // Indented sub-tasks below this task
+  pageTags: string[];        // Tags from the page frontmatter
 }
 
 export interface KiboTasksSettings {

@@ -45,11 +45,19 @@ export const PRIORITY_PATTERN = /[\u{1F53A}\u{23EB}\u{1F53C}\u{1F53D}]/u;
 
 export const DEFAULT_COLUMNS: ColumnConfig[] = [
   {
+    id: 'backlog',
+    label: 'Backlog',
+    tag: null,
+    type: 'backlog',
+    color: '#6B7280',
+    collapsed: true,
+  },
+  {
     id: 'todo',
     label: 'To Do',
     tag: null,
     type: 'todo',
-    color: '#3b82f6',
+    color: '#6B7280',
     collapsed: false,
   },
   {
@@ -57,7 +65,7 @@ export const DEFAULT_COLUMNS: ColumnConfig[] = [
     label: 'In Progress',
     tag: '#in-progress',
     type: 'tag',
-    color: '#f59e0b',
+    color: '#F59E0B',
     collapsed: false,
   },
   {
@@ -65,17 +73,9 @@ export const DEFAULT_COLUMNS: ColumnConfig[] = [
     label: 'Done',
     tag: null,
     type: 'done',
-    color: '#22c55e',
+    color: '#10B981',
     collapsed: false,
     limit: 10,
-  },
-  {
-    id: 'backlog',
-    label: 'Backlog',
-    tag: null,
-    type: 'backlog',
-    color: '#94a3b8',
-    collapsed: true,
   },
 ];
 
