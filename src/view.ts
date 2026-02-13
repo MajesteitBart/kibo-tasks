@@ -31,14 +31,14 @@ export class KiboTasksView extends ItemView {
   }
 
   getDisplayText(): string {
-    return 'Kibo Tasks';
+    return 'Kibo tasks';
   }
 
   getIcon(): string {
     return 'kanban';
   }
 
-  async onOpen(): Promise<void> {
+  onOpen(): void {
     const container = this.containerEl.children[1] as HTMLElement;
     container.empty();
     container.addClass('kibo-tasks-container');
@@ -69,7 +69,7 @@ export class KiboTasksView extends ItemView {
     this.renderer.render();
   }
 
-  async onClose(): Promise<void> {
+  onClose(): void {
     this.unsubscribe?.();
     this.renderer?.destroy();
     this.renderer = null;

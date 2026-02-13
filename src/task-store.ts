@@ -1,5 +1,6 @@
-import type { App, TFile, TAbstractFile } from 'obsidian';
-import type { KiboTask, KiboTasksSettings, ColumnConfig } from './types';
+import { TFile } from 'obsidian';
+import type { App, TAbstractFile } from 'obsidian';
+import type { KiboTask, KiboTasksSettings } from './types';
 import { parseTasksFromContent, assignColumn } from './task-parser';
 import { isDueOrOverdue } from './utils/date-utils';
 
@@ -63,9 +64,9 @@ export class TaskStore {
 
     if (!this.isExcluded(filePath)) {
       const file = this.app.vault.getAbstractFileByPath(filePath);
-      if (file && 'extension' in file && (file as TFile).extension === 'md') {
+      if (file instanceof TFile && file.extension === 'md') {
         try {
-          const content = await this.app.vault.cachedRead(file as TFile);
+          const content = await this.app.vault.cachedRead(file);
           const fileTasks = parseTasksFromContent(
             content,
             filePath,
@@ -74,7 +75,7 @@ export class TaskStore {
           );
 
           // Populate page tags from frontmatter
-          const pageTags = this.getPageTags(file as TFile);
+          const pageTags = this.getPageTags(file);
           for (const task of fileTasks) {
             task.pageTags = pageTags;
           }
@@ -248,6 +249,8 @@ export class TaskStore {
   }
 
   private isExcluded(path: string): boolean {
+    const configDir = this.app.vault.configDir;
+    if (path.startsWith(configDir + '/') || path === configDir) return true;
     return this.settings.excludedFolders.some(
       (folder) => path.startsWith(folder + '/') || path === folder
     );
@@ -264,7 +267,7 @@ export class TaskStore {
   private debouncedReparse(filePath: string): void {
     if (this.debounceTimer) clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(() => {
-      this.reparseFile(filePath);
+      void this.reparseFile(filePath);
     }, 300);
   }
 

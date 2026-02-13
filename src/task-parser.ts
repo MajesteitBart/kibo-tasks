@@ -1,7 +1,7 @@
 import type { KiboTask, SubTask, ColumnConfig, TaskStatus } from './types';
 import { parseEmojiMetadata, cleanDescription } from './utils/emoji-parser';
 
-const TASK_LINE_REGEX = /^(\s*)- \[([ x\/\-!])\]\s+(.+)$/;
+const TASK_LINE_REGEX = /^(\s*)- \[([ x/\-!])\]\s+(.+)$/;
 
 /**
  * Parse tasks from a single file's content.

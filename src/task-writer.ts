@@ -1,4 +1,5 @@
-import type { App, TFile } from 'obsidian';
+import { TFile } from 'obsidian';
+import type { App } from 'obsidian';
 import type { KiboTask } from './types';
 import { EMOJI } from './constants';
 import { todayStr } from './utils/date-utils';
@@ -41,7 +42,7 @@ export class TaskWriter {
     const doneDate = todayStr();
     await this.modifyLine(task.filePath, task.lineNumber, (line) => {
       // Change checkbox to [x]
-      let result = line.replace(/- \[[ \/!]\]/, '- [x]');
+      let result = line.replace(/- \[[ /!]\]/, '- [x]');
 
       // Remove column tags
       for (const tag of columnTags) {
@@ -83,7 +84,7 @@ export class TaskWriter {
     allColumnTags: string[]
   ): Promise<void> {
     if (targetColumnType === 'done') {
-      await this.completeTask(task, allColumnTags.filter((t) => t !== null) as string[]);
+      await this.completeTask(task, allColumnTags.filter((t) => t !== null));
       return;
     }
 
@@ -153,9 +154,9 @@ export class TaskWriter {
     transform: (line: string) => string
   ): Promise<void> {
     const file = this.app.vault.getAbstractFileByPath(filePath);
-    if (!file || !('extension' in file)) return;
+    if (!(file instanceof TFile)) return;
 
-    await this.app.vault.process(file as TFile, (content) => {
+    await this.app.vault.process(file, (content) => {
       const lines = content.split('\n');
       if (lineNumber >= 0 && lineNumber < lines.length) {
         lines[lineNumber] = transform(lines[lineNumber]);

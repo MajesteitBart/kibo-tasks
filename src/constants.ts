@@ -81,7 +81,7 @@ export const DEFAULT_COLUMNS: ColumnConfig[] = [
 
 export const DEFAULT_SETTINGS: KiboTasksSettings = {
   columns: DEFAULT_COLUMNS,
-  excludedFolders: ['.trash', '.obsidian', '.stversions', '.claude', '.roo', 'Templates'],
+  excludedFolders: ['.trash', '.stversions', '.claude', '.roo', 'Templates'],
   todoFilter: 'due-today',
   globalFilter: '#task',
   doneLimit: 10,

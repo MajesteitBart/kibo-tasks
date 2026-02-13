@@ -14,14 +14,14 @@ export class KiboTasksSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
-    containerEl.createEl('h2', { text: 'Kibo Tasks Settings' });
+    new Setting(containerEl).setName('Kibo Tasks settings').setHeading();
 
     // --- General ---
-    containerEl.createEl('h3', { text: 'General' });
+    new Setting(containerEl).setName('General').setHeading();
 
     new Setting(containerEl)
       .setName('Global filter tag')
-      .setDesc('Only tasks containing this tag are shown. Must match your Tasks plugin config.')
+      .setDesc('Only tasks containing this tag are shown. Must match your tasks plugin config.')
       .addText((text) =>
         text
           .setPlaceholder('#task')
@@ -33,8 +33,8 @@ export class KiboTasksSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName('To Do filter mode')
-      .setDesc('What tasks appear in the To Do column. Undated tasks always go to Backlog.')
+      .setName('To do filter mode')
+      .setDesc('What tasks appear in the to do column. Undated tasks always go to backlog.')
       .addDropdown((dropdown) =>
         dropdown
           .addOption('due-today', 'Due today + overdue only')
@@ -65,7 +65,7 @@ export class KiboTasksSettingTab extends PluginSettingTab {
       .setDesc('Folders to skip when scanning for tasks (one per line).')
       .addTextArea((text) =>
         text
-          .setPlaceholder('.trash\n.obsidian\nTemplates')
+          .setPlaceholder('.trash\nTemplates')
           .setValue(this.plugin.settings.excludedFolders.join('\n'))
           .onChange(async (value) => {
             this.plugin.settings.excludedFolders = value
@@ -77,11 +77,10 @@ export class KiboTasksSettingTab extends PluginSettingTab {
       );
 
     // --- Columns ---
-    containerEl.createEl('h3', { text: 'Columns' });
-    containerEl.createEl('p', {
-      text: 'Configure the board columns. "To Do" and "Done" columns cannot be deleted.',
-      cls: 'setting-item-description',
-    });
+    new Setting(containerEl)
+      .setName('Columns')
+      .setDesc('Configure the board columns. "To do" and "Done" columns cannot be deleted.')
+      .setHeading();
 
     const columnsContainer = containerEl.createDiv({ cls: 'kibo-settings-columns' });
     this.renderColumns(columnsContainer);
@@ -91,7 +90,7 @@ export class KiboTasksSettingTab extends PluginSettingTab {
       .setName('Add column')
       .setDesc('Add a new tag-based column to the board.')
       .addButton((btn) =>
-        btn.setButtonText('+ Add Column').onClick(async () => {
+        btn.setButtonText('+ Add column').onClick(async () => {
           const id = `custom-${Date.now()}`;
           // Insert before Done and Backlog (last two)
           const insertIdx = Math.max(0, this.plugin.settings.columns.length - 2);

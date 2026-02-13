@@ -1,4 +1,4 @@
-import type { ColumnConfig, KiboTask } from './types';
+import type { ColumnConfig } from './types';
 import type { TaskWriter } from './task-writer';
 import type { TaskStore } from './task-store';
 

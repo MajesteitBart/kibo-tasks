@@ -1,4 +1,4 @@
-import { Plugin, WorkspaceLeaf } from 'obsidian';
+import { Plugin } from 'obsidian';
 import type { KiboTasksSettings } from './types';
 import { VIEW_TYPE_KIBO, DEFAULT_SETTINGS } from './constants';
 import { KiboTasksView } from './view';
@@ -24,15 +24,15 @@ export default class KiboTasksPlugin extends Plugin {
 
     // Ribbon icon
     this.addRibbonIcon('kanban', 'Open Kibo Tasks', () => {
-      this.activateView();
+      void this.activateView();
     });
 
     // Command palette
     this.addCommand({
-      id: 'open-kibo-tasks',
-      name: 'Open Kibo Tasks board',
+      id: 'open-board',
+      name: 'Open board',
       callback: () => {
-        this.activateView();
+        void this.activateView();
       },
     });
 
@@ -74,7 +74,7 @@ export default class KiboTasksPlugin extends Plugin {
   private async activateView(): Promise<void> {
     const existing = this.app.workspace.getLeavesOfType(VIEW_TYPE_KIBO);
     if (existing.length > 0) {
-      this.app.workspace.revealLeaf(existing[0]);
+      await this.app.workspace.revealLeaf(existing[0]);
       return;
     }
 
@@ -83,6 +83,6 @@ export default class KiboTasksPlugin extends Plugin {
       type: VIEW_TYPE_KIBO,
       active: true,
     });
-    this.app.workspace.revealLeaf(leaf);
+    await this.app.workspace.revealLeaf(leaf);
   }
 }

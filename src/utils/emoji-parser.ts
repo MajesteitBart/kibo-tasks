@@ -12,8 +12,6 @@ export interface ParsedEmojis {
   recurrence: string | null;
 }
 
-const DATE_PATTERN = /(\d{4}-\d{2}-\d{2})/;
-
 /**
  * Parse all emoji metadata from a task line.
  */

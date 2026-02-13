@@ -1,7 +1,7 @@
 import type { App, Component } from 'obsidian';
-import { MarkdownRenderer } from 'obsidian';
+import { MarkdownRenderer, TFile } from 'obsidian';
 import Sortable from 'sortablejs';
-import type { KiboTask, ColumnConfig, KiboTasksSettings, SubTask } from './types';
+import type { KiboTask, ColumnConfig, KiboTasksSettings } from './types';
 import type { TaskStore } from './task-store';
 import type { DragHandler } from './drag-handler';
 import { PRIORITY_COLORS, PRIORITY_LABELS } from './constants';
@@ -115,7 +115,7 @@ export class BoardRenderer {
       cls: 'kibo-collapse-btn',
       attr: { 'aria-label': 'Collapse column' },
     });
-    collapseBtn.innerHTML = '&minus;';
+    collapseBtn.setText('\u2212');
     collapseBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       this.collapsedState.set(col.id, true);
@@ -154,7 +154,7 @@ export class BoardRenderer {
         const targetColId = evt.to.getAttribute('data-column-id');
 
         if (taskId && sourceColId && targetColId) {
-          this.dragHandler.handleDragEnd({
+          void this.dragHandler.handleDragEnd({
             taskId,
             sourceColumnId: sourceColId,
             targetColumnId: targetColId,
@@ -178,7 +178,7 @@ export class BoardRenderer {
 
     // Description — rendered as Obsidian markdown (supports [[links]], **bold**, tags, etc.)
     const desc = card.createDiv({ cls: 'kibo-card-description' });
-    MarkdownRenderer.render(
+    void MarkdownRenderer.render(
       this.app,
       task.description,
       desc,
@@ -229,7 +229,7 @@ export class BoardRenderer {
     }
 
     // Click → open source file
-    card.addEventListener('click', async (e) => {
+    card.addEventListener('click', (e) => {
       if (card.classList.contains('kibo-drag')) return;
       // Don't navigate when clicking links inside the card, subtask toggles, etc.
       const target = e.target as HTMLElement;
@@ -237,9 +237,9 @@ export class BoardRenderer {
       e.preventDefault();
 
       const file = this.app.vault.getAbstractFileByPath(task.filePath);
-      if (file) {
+      if (file instanceof TFile) {
         const leaf = this.app.workspace.getLeaf(false);
-        await leaf.openFile(file as any, {
+        void leaf.openFile(file, {
           eState: { line: task.lineNumber },
         });
       }
@@ -273,13 +273,13 @@ export class BoardRenderer {
 
     for (const sub of task.subtasks) {
       const item = list.createDiv({ cls: 'kibo-subtask-item' });
-      const checkbox = item.createEl('span', {
+      item.createEl('span', {
         cls: `kibo-subtask-checkbox ${sub.status === 'x' ? 'kibo-subtask-checkbox--done' : ''}`,
         text: sub.status === 'x' ? '\u2611' : '\u2610', // ☑ or ☐
       });
 
       const subDesc = item.createDiv({ cls: 'kibo-subtask-description' });
-      MarkdownRenderer.render(
+      void MarkdownRenderer.render(
         this.app,
         sub.description,
         subDesc,
