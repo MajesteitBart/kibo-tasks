@@ -21,6 +21,55 @@
   overflow: hidden;
 }
 
+/* ── Date Navigation ── */
+.kibo-date-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px 0;
+  flex-shrink: 0;
+}
+
+.kibo-date-nav-btn {
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px 10px;
+  font-size: 16px;
+  line-height: 1;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.kibo-date-nav-btn:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.kibo-date-nav-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-normal);
+  background: none;
+  border: none;
+  cursor: default;
+  padding: 4px 8px;
+  border-radius: 4px;
+  min-width: 120px;
+  text-align: center;
+}
+
+.kibo-date-nav-label--away {
+  cursor: pointer;
+  color: var(--text-accent);
+}
+
+.kibo-date-nav-label--away:hover {
+  background: var(--background-modifier-hover);
+}
+
 /* ── Columns Container ── */
 .kibo-columns {
   display: flex;
@@ -382,6 +431,26 @@
   background: var(--background-secondary);
   padding: 1px 6px;
   border-radius: 4px;
+}
+
+/* ── Section Divider (overdue separator) ── */
+.kibo-section-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.kibo-section-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--background-modifier-border);
 }
 
 /* ── Empty State ── */

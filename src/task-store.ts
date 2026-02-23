@@ -2,7 +2,7 @@ import { TFile } from 'obsidian';
 import type { App, TAbstractFile } from 'obsidian';
 import type { KiboTask, KiboTasksSettings } from './types';
 import { parseTasksFromContent, assignColumn } from './task-parser';
-import { isDueOrOverdue } from './utils/date-utils';
+import { todayStr } from './utils/date-utils';
 
 type Subscriber = () => void;
 
@@ -154,7 +154,7 @@ export class TaskStore {
   /**
    * Get tasks grouped by column, applying filters.
    */
-  getTasksByColumn(): Map<string, KiboTask[]> {
+  getTasksByColumn(selectedDate?: string): Map<string, KiboTask[]> {
     const result = new Map<string, KiboTask[]>();
 
     // Initialize all columns
@@ -169,9 +169,12 @@ export class TaskStore {
       const col = this.settings.columns.find((c) => c.id === colId);
       if (!col) continue;
 
-      // Apply "To Do" filter: only overdue + due today (undated goes to backlog)
-      if (col.type === 'todo' && this.settings.todoFilter === 'due-today') {
-        if (!task.dueDate || !isDueOrOverdue(task.dueDate)) continue;
+      // Apply "To Do" date filter (undated goes to backlog)
+      // Show tasks with due date <= selected date
+      if (col.type === 'todo') {
+        if (!task.dueDate) continue;
+        const ref = selectedDate || todayStr();
+        if (task.dueDate > ref) continue;
       }
 
       const list = result.get(colId) || [];

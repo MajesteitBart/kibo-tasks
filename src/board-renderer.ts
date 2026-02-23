@@ -5,7 +5,7 @@ import type { KiboTask, ColumnConfig, KiboTasksSettings } from './types';
 import type { TaskStore } from './task-store';
 import type { DragHandler } from './drag-handler';
 import { PRIORITY_COLORS, PRIORITY_LABELS } from './constants';
-import { isOverdue, isToday, formatDateShort } from './utils/date-utils';
+import { isOverdue, isToday, formatDateShort, todayStr, shiftDate, formatNavDate } from './utils/date-utils';
 
 export class BoardRenderer {
   private app: App;
@@ -16,6 +16,7 @@ export class BoardRenderer {
   private component: Component;
   private sortables: Sortable[] = [];
   private collapsedState: Map<string, boolean> = new Map();
+  private dateOffset = 0;
 
   constructor(
     app: App,
@@ -45,8 +46,13 @@ export class BoardRenderer {
     this.destroySortables();
     this.containerEl.empty();
 
-    const tasksByColumn = this.store.getTasksByColumn();
+    const selectedDate = shiftDate(todayStr(), this.dateOffset);
     const board = this.containerEl.createDiv({ cls: 'kibo-board' });
+
+    // Date navigation bar
+    this.renderDateNav(board, selectedDate);
+
+    const tasksByColumn = this.store.getTasksByColumn(selectedDate);
     const columnsContainer = board.createDiv({ cls: 'kibo-columns' });
 
     for (const col of this.settings.columns) {
@@ -66,6 +72,43 @@ export class BoardRenderer {
   }
 
   // --- Private ---
+
+  private renderDateNav(parent: HTMLElement, selectedDate: string): void {
+    const nav = parent.createDiv({ cls: 'kibo-date-nav' });
+
+    const prevBtn = nav.createEl('button', {
+      cls: 'kibo-date-nav-btn',
+      attr: { 'aria-label': 'Previous day' },
+    });
+    prevBtn.setText('\u2039'); // ‹
+    prevBtn.addEventListener('click', () => {
+      this.dateOffset--;
+      this.render();
+    });
+
+    const label = nav.createEl('button', {
+      cls: 'kibo-date-nav-label',
+      attr: { 'aria-label': 'Go to today' },
+    });
+    label.setText(formatNavDate(selectedDate));
+    if (this.dateOffset !== 0) {
+      label.classList.add('kibo-date-nav-label--away');
+    }
+    label.addEventListener('click', () => {
+      this.dateOffset = 0;
+      this.render();
+    });
+
+    const nextBtn = nav.createEl('button', {
+      cls: 'kibo-date-nav-btn',
+      attr: { 'aria-label': 'Next day' },
+    });
+    nextBtn.setText('\u203A'); // ›
+    nextBtn.addEventListener('click', () => {
+      this.dateOffset++;
+      this.render();
+    });
+  }
 
   private renderCollapsedColumn(
     parent: HTMLElement,
@@ -201,7 +244,10 @@ export class BoardRenderer {
 
       if (task.dueDate) {
         const formatted = formatDateShort(task.dueDate);
-        if (isOverdue(task.dueDate)) {
+        if (col.type === 'done') {
+          // Don't show overdue styling for completed tasks
+          dateLine.createEl('span', { text: formatted });
+        } else if (isOverdue(task.dueDate)) {
           dateLine.createEl('span', { cls: 'kibo-date--overdue', text: formatted });
         } else if (isToday(task.dueDate)) {
           dateLine.createEl('span', { cls: 'kibo-date--today', text: formatted });

@@ -57,3 +57,31 @@ export function formatDateShort(dateStr: string): string {
     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   return `${months[d.getMonth()]} ${d.getDate()}`;
 }
+
+/**
+ * Shift a YYYY-MM-DD date by N days.
+ */
+export function shiftDate(dateStr: string, days: number): string {
+  const d = parseDate(dateStr);
+  if (!d) return dateStr;
+  d.setDate(d.getDate() + days);
+  const y = d.getFullYear();
+  const mo = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${mo}-${day}`;
+}
+
+/**
+ * Format a date for the navigation bar (e.g., "Today, Feb 23" or "Wed, Feb 26").
+ */
+export function formatNavDate(dateStr: string): string {
+  const today = todayStr();
+  const short = formatDateShort(dateStr);
+  if (dateStr === today) return `Today, ${short}`;
+  if (dateStr === shiftDate(today, 1)) return `Tomorrow, ${short}`;
+  if (dateStr === shiftDate(today, -1)) return `Yesterday, ${short}`;
+  const d = parseDate(dateStr);
+  if (!d) return short;
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  return `${days[d.getDay()]}, ${short}`;
+}
