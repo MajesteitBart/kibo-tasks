@@ -85,4 +85,5 @@ export const DEFAULT_SETTINGS: KiboTasksSettings = {
   todoFilter: 'due-today',
   globalFilter: '#task',
   doneLimit: 10,
+  savedViews: [],
 };

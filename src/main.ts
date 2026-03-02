@@ -1,5 +1,5 @@
 import { Plugin } from 'obsidian';
-import type { KiboTasksSettings } from './types';
+import type { KiboTasksSettings, ColumnConfig } from './types';
 import { VIEW_TYPE_KIBO, DEFAULT_SETTINGS } from './constants';
 import { KiboTasksView } from './view';
 import { TaskStore } from './task-store';
@@ -19,7 +19,16 @@ export default class KiboTasksPlugin extends Plugin {
 
     // Register the view
     this.registerView(VIEW_TYPE_KIBO, (leaf) =>
-      new KiboTasksView(leaf, this.store!, this.writer!, this.settings)
+      new KiboTasksView(
+        leaf,
+        this.store!,
+        this.writer!,
+        this.settings,
+        async (savedViews) => {
+          this.settings.savedViews = savedViews;
+          await this.saveSettings();
+        }
+      )
     );
 
     // Ribbon icon
@@ -57,6 +66,10 @@ export default class KiboTasksPlugin extends Plugin {
     if (!this.settings.columns || this.settings.columns.length === 0) {
       this.settings.columns = [...DEFAULT_SETTINGS.columns];
     }
+    this.settings.columns = this.normalizeColumns(this.settings.columns);
+    if (!Array.isArray(this.settings.savedViews)) {
+      this.settings.savedViews = [];
+    }
   }
 
   async saveSettings(): Promise<void> {
@@ -84,5 +97,11 @@ export default class KiboTasksPlugin extends Plugin {
       active: true,
     });
     await this.app.workspace.revealLeaf(leaf);
+  }
+
+  private normalizeColumns(columns: ColumnConfig[]): ColumnConfig[] {
+    const backlog = columns.find((col) => col.type === 'backlog');
+    if (!backlog) return columns;
+    return [backlog, ...columns.filter((col) => col !== backlog)];
   }
 }

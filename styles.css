@@ -21,14 +21,24 @@
   overflow: hidden;
 }
 
+/* ── Top Bar ── */
+.kibo-top-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 20px 0;
+  flex-shrink: 0;
+}
+
 /* ── Date Navigation ── */
 .kibo-date-nav {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 8px;
-  padding: 10px 20px 0;
-  flex-shrink: 0;
+  flex-shrink: 1;
+  min-width: 0;
 }
 
 .kibo-date-nav-btn {
@@ -68,6 +78,138 @@
 
 .kibo-date-nav-label--away:hover {
   background: var(--background-modifier-hover);
+}
+
+/* ── Filters ── */
+.kibo-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.kibo-filters-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.kibo-filter-input {
+  height: 28px;
+  line-height: 20px;
+  min-width: 120px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--background-modifier-border);
+  background: var(--background-secondary);
+  color: var(--text-normal);
+  font-size: 12px;
+  font-family: inherit;
+  box-shadow: none !important;
+}
+
+.kibo-filter-input:focus {
+  outline: none;
+  border-color: var(--interactive-accent);
+}
+
+.kibo-filter-select {
+  cursor: pointer;
+}
+
+.kibo-filter-btn {
+  height: 28px;
+  line-height: 20px;
+  padding: 0 10px;
+  border-radius: 6px;
+  border: 1px solid var(--background-modifier-border);
+  background: var(--background-secondary);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+  box-shadow: none !important;
+}
+
+.kibo-filter-btn:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.kibo-filter-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.kibo-filter-icon-btn {
+  width: 28px;
+  min-width: 28px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kibo-filter-icon-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.kibo-multi-select {
+  position: relative;
+}
+
+.kibo-multi-select > summary {
+  list-style: none;
+}
+
+.kibo-multi-select > summary::-webkit-details-marker {
+  display: none;
+}
+
+.kibo-multi-select-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 190px;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid var(--background-modifier-border);
+  background: var(--background-primary);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+
+.kibo-multi-select-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-normal);
+  padding: 2px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.kibo-multi-select-option:hover {
+  background: var(--background-modifier-hover);
+}
+
+.kibo-multi-select-option input {
+  margin: 0;
+}
+
+.kibo-multi-select-hint {
+  font-size: 11px;
+  color: var(--text-faint);
+  padding: 2px 4px 0;
 }
 
 /* ── Columns Container ── */
@@ -519,6 +661,39 @@
 
 /* ── Responsive ── */
 @media (max-width: 600px) {
+  .kibo-top-bar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 10px 12px 0;
+  }
+
+  .kibo-filters {
+    align-items: stretch;
+  }
+
+  .kibo-filters-row {
+    justify-content: flex-start;
+  }
+
+  .kibo-filter-input,
+  .kibo-filter-btn:not(.kibo-filter-icon-btn) {
+    flex: 1 1 100%;
+  }
+
+  .kibo-multi-select {
+    flex: 1 1 100%;
+  }
+
+  .kibo-multi-select > summary {
+    width: 100%;
+  }
+
+  .kibo-multi-select-menu {
+    left: 0;
+    right: auto;
+    width: 100%;
+  }
+
   .kibo-column {
     min-width: 240px;
     max-width: 240px;

@@ -10,6 +10,7 @@ export class KiboTasksView extends ItemView {
   private store: TaskStore;
   private writer: TaskWriter;
   private settings: KiboTasksSettings;
+  private onSavedViewsChange: (views: KiboTasksSettings['savedViews']) => Promise<void>;
   private renderer: BoardRenderer | null = null;
   private dragHandler: DragHandler | null = null;
   private unsubscribe: (() => void) | null = null;
@@ -18,12 +19,14 @@ export class KiboTasksView extends ItemView {
     leaf: WorkspaceLeaf,
     store: TaskStore,
     writer: TaskWriter,
-    settings: KiboTasksSettings
+    settings: KiboTasksSettings,
+    onSavedViewsChange: (views: KiboTasksSettings['savedViews']) => Promise<void>
   ) {
     super(leaf);
     this.store = store;
     this.writer = writer;
     this.settings = settings;
+    this.onSavedViewsChange = onSavedViewsChange;
   }
 
   getViewType(): string {
@@ -57,7 +60,10 @@ export class KiboTasksView extends ItemView {
       this.store,
       this.dragHandler,
       this.settings,
-      this // Component reference for Obsidian's MarkdownRenderer
+      this, // Component reference for Obsidian's MarkdownRenderer
+      (views) => {
+        void this.handleSavedViewsChange(views);
+      }
     );
 
     // Subscribe to store changes
@@ -84,5 +90,10 @@ export class KiboTasksView extends ItemView {
     this.dragHandler?.updateColumns(settings.columns);
     this.renderer?.updateSettings(settings);
     this.renderer?.render();
+  }
+
+  private async handleSavedViewsChange(views: KiboTasksSettings['savedViews']): Promise<void> {
+    this.settings.savedViews = views;
+    await this.onSavedViewsChange(views);
   }
 }

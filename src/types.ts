@@ -3,6 +3,19 @@ export type Priority = 'highest' | 'high' | 'medium' | 'low' | 'none';
 export type ColumnType = 'todo' | 'backlog' | 'tag' | 'done';
 export type TodoFilterMode = 'due-today' | 'all-undone';
 
+export interface TaskFilters {
+  tag: string;
+  path: string;
+  priorities: Priority[];
+  statuses: TaskStatus[];
+}
+
+export interface SavedFilterView {
+  id: string;
+  name: string;
+  filters: TaskFilters;
+}
+
 export interface ColumnConfig {
   id: string;
   label: string;
@@ -43,4 +56,5 @@ export interface KiboTasksSettings {
   todoFilter: TodoFilterMode;
   globalFilter: string;
   doneLimit: number;
+  savedViews: SavedFilterView[];
 }

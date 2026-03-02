@@ -92,8 +92,9 @@ export class KiboTasksSettingTab extends PluginSettingTab {
       .addButton((btn) =>
         btn.setButtonText('+ Add column').onClick(async () => {
           const id = `custom-${Date.now()}`;
-          // Insert before Done and Backlog (last two)
-          const insertIdx = Math.max(0, this.plugin.settings.columns.length - 2);
+          // Insert before the Done column when present
+          const doneIdx = this.plugin.settings.columns.findIndex((col) => col.type === 'done');
+          const insertIdx = doneIdx >= 0 ? doneIdx : this.plugin.settings.columns.length;
           this.plugin.settings.columns.splice(insertIdx, 0, {
             id,
             label: 'New Column',
